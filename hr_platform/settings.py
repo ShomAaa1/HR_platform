@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "replace-this"
@@ -14,6 +15,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "resumes",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -46,6 +48,12 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
     ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 DATABASES = {
@@ -61,3 +69,10 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+AUTH_USER_MODEL = "users.User"
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),      # токен доступа будет жить 1 час
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # токен обновления будет жить 7 дней
+    'ROTATE_REFRESH_TOKENS': True,                  # при обновлении refresh-токена выдаётся новый
+    'BLACKLIST_AFTER_ROTATION': True,               # старый refresh-токен станет недействительным
+}
